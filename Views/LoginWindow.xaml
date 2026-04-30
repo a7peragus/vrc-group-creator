@@ -1,0 +1,41 @@
+<Window x:Class="VrcGroupCreator.Views.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:converters="clr-namespace:VrcGroupCreator.Converters"
+        Title="Add Account - VRChat" Height="400" Width="350"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        FontFamily="{materialDesign:MaterialDesignFont}"
+        Icon="pack://application:,,,/app_icon.ico">
+    <Grid Margin="20">
+        <StackPanel>
+            <TextBlock Text="Add VRChat Account" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Margin="0,0,0,20" HorizontalAlignment="Center"/>
+
+            <TextBox materialDesign:HintAssist.Hint="Username" 
+                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                     Text="{Binding Username}" Margin="0,0,0,12" />
+
+            <PasswordBox materialDesign:HintAssist.Hint="Password" 
+                         Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+                         Margin="0,0,0,20"
+                         x:Name="PasswordBox" />
+
+            <Button Content="Login" Click="LoginButton_Click" 
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    Visibility="{Binding Requires2FA, Converter={StaticResource InverseBoolToVisConverter}}" />
+
+            <!-- 2FA Section -->
+            <StackPanel Visibility="{Binding Requires2FA, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,16,0,0">
+                <TextBox materialDesign:HintAssist.Hint="2FA Code" 
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         Text="{Binding TwoFactorCode}" Margin="0,0,0,12" />
+                <Button Content="Verify 2FA" Command="{Binding Verify2FACommand}" 
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
+            </StackPanel>
+
+            <TextBlock Text="{Binding StatusMessage}" Margin="0,16,0,0" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+        </StackPanel>
+    </Grid>
+</Window>

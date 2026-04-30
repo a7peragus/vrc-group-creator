@@ -1,0 +1,91 @@
+<UserControl x:Class="VrcGroupCreator.Views.Controls.GroupListControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:VrcGroupCreator.Converters">
+    <materialDesign:Card Padding="16" VerticalAlignment="Stretch">
+        <DockPanel>
+            <Grid DockPanel.Dock="Top" Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Your Groups" Style="{StaticResource MaterialDesignHeadline6TextBlock}" VerticalAlignment="Center"/>
+                <Button Grid.Column="1"
+                        Command="{Binding DeleteSelectedGroupsCommand}"
+                        IsEnabled="{Binding IsLoggedIn}"
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        Foreground="#E53935"
+                        ToolTip="Delete Selected Groups">
+                    <materialDesign:PackIcon Kind="DeleteSweep" />
+                </Button>
+                <Button Grid.Column="2" Command="{Binding LoadGroupsAsyncCommand}" 
+                        IsEnabled="{Binding IsLoggedIn}"
+                        Style="{StaticResource MaterialDesignIconButton}" ToolTip="Refresh Groups">
+                    <materialDesign:PackIcon Kind="Refresh" />
+                </Button>
+            </Grid>
+            
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding UserGroups}">
+                     <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <materialDesign:Card Margin="0,0,0,8" Padding="12" materialDesign:ElevationAssist.Elevation="Dp2">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <!-- Lock / unlock toggle — left side -->
+                                    <Button Grid.Column="0" Command="{Binding ToggleProtectionCommand}"
+                                            Style="{StaticResource MaterialDesignIconButton}"
+                                            ToolTip="Toggle deletion protection"
+                                            Width="30" Height="30" Padding="0" Margin="0,0,8,0" VerticalAlignment="Center">
+                                        <materialDesign:PackIcon Width="18" Height="18">
+                                            <materialDesign:PackIcon.Style>
+                                                <Style TargetType="materialDesign:PackIcon">
+                                                    <Setter Property="Kind" Value="LockOpen" />
+                                                    <Setter Property="Foreground" Value="Gray" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsProtected}" Value="True">
+                                                            <Setter Property="Kind" Value="Lock" />
+                                                            <Setter Property="Foreground" Value="#FFB300" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </materialDesign:PackIcon.Style>
+                                        </materialDesign:PackIcon>
+                                    </Button>
+                                    <!-- Group info — centre -->
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Group.Name}" FontWeight="Bold" FontSize="14" />
+                                        <TextBlock Text="{Binding Group.FullShortCode}" Opacity="0.7" FontSize="12" />
+                                        <TextBlock Text="{Binding Group.MemberCount, StringFormat='Members: {0}'}" FontSize="11" Margin="0,4,0,0" />
+                                    </StackPanel>
+                                    <!-- Checkbox — next to delete -->
+                                    <CheckBox Grid.Column="2"
+                                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                              IsEnabled="{Binding IsProtected, Converter={StaticResource InverseBooleanConverter}}"
+                                              VerticalAlignment="Center" Margin="0,0,6,0" />
+                                    <!-- Delete button — right side, disabled while protected -->
+                                    <Button Grid.Column="3"
+                                            Command="{Binding DataContext.DeleteGroupCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                            CommandParameter="{Binding}"
+                                            IsEnabled="{Binding IsProtected, Converter={StaticResource InverseBooleanConverter}}"
+                                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                                            Foreground="Red" BorderBrush="Red"
+                                            Padding="4" Height="30" Width="30" VerticalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="Delete" Width="18" Height="18" />
+                                    </Button>
+                                </Grid>
+                            </materialDesign:Card>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </DockPanel>
+    </materialDesign:Card>
+</UserControl>
