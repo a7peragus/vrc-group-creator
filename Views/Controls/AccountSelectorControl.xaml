@@ -1,0 +1,33 @@
+<UserControl x:Class="VrcGroupCreator.Views.Controls.AccountSelectorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <materialDesign:Card Padding="16" Margin="0,0,0,16">
+        <StackPanel>
+            <TextBlock Text="Account" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="0,0,0,12" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ComboBox ItemsSource="{Binding Accounts}" 
+                          SelectedItem="{Binding SelectedAccount}"
+                          DisplayMemberPath="DisplayName"
+                          materialDesign:HintAssist.Hint="Select Account"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                <Button Grid.Column="1" Command="{Binding ShowAddAccountCommand}" 
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        ToolTip="Add New Account" Margin="8,0,0,0">
+                    <materialDesign:PackIcon Kind="AccountPlus" />
+                </Button>
+                <Button Grid.Column="2" Command="{Binding RemoveAccountCommand}" 
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        Foreground="#E53935"
+                        ToolTip="Remove Selected Account" Margin="4,0,0,0">
+                    <materialDesign:PackIcon Kind="AccountMinus" />
+                </Button>
+            </Grid>
+        </StackPanel>
+    </materialDesign:Card>
+</UserControl>
